@@ -1,0 +1,62 @@
+{
+  "returnCode": "01",
+  "errorMessage": "获取首页数据成功!",
+  "results": {
+    "data": [
+      {
+        "isNewRecord": false,
+        "id": "1147911829761748992",
+        "itemType": "title",
+        "title": "test3",
+        "subTitle": "sub_test",
+        "leftImg": "img",
+        "rightText": "test",
+        "clickAction": "target",
+        "titleColor": 0,
+        "remark": "remark",
+        "normalDatas": [
+          {
+            "isNewRecord": false,
+            "id": "1148402509690712064",
+            "itemType": "title",
+            "imgUrl": "http://aihuahua.xyz",
+            "clickAction": "target1",
+            "titleColor": 0,
+            "title": "title2",
+            "remark": "remarks"
+          },
+          {
+            "isNewRecord": false,
+            "id": "1148402467856723968",
+            "itemType": "title",
+            "imgUrl": "http://aihuahua.xyz",
+            "clickAction": "target1",
+            "titleColor": 0,
+            "title": "title13",
+            "remark": "remarks"
+          },
+          {
+            "isNewRecord": false,
+            "id": "1148402429348818944",
+            "itemType": "title",
+            "imgUrl": "http://aihuahua.xyz",
+            "clickAction": "target1",
+            "titleColor": 0,
+            "title": "title1",
+            "remark": "remarks"
+          },
+          {
+            "isNewRecord": false,
+            "id": "1147912434584580096",
+            "itemType": "title",
+            "imgUrl": "http://aihuahua.xyz",
+            "clickAction": "target",
+            "titleColor": 0,
+            "title": "title",
+            "remark": "remark"
+          }
+        ]
+      }
+    ]
+  }
+}

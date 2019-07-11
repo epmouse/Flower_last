@@ -1,0 +1,41 @@
+name: flower_last
+description: the last version.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  flutter_swiper: ^1.1.6
+  cached_network_image: ^0.8.0
+  flutter_webview_plugin: ^0.3.5
+  fluttertoast: ^3.1.0
+  dio: ^2.1.2
+  image_picker: ^0.6.0+4
+  flutter_spinkit: ^3.1.0
+  device_info: ^0.4.0+2
+  flutter_icons:
+  shared_preferences: 0.5.3+2
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - imgs/muke.jpg
+    - imgs/guide_1.png
+    - imgs/guide_2.png
+    - imgs/guide_3.png
+    - imgs/guide_4.png
+    - imgs/guide_5.png
