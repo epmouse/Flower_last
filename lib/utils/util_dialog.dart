@@ -14,17 +14,21 @@ class DialogUtils {
           return MediaQuery(
             data: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
                 .copyWith(textScaleFactor: 1),
-            child: SafeArea(child: SpinKitWave(
-              size: 30,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                );
-              },
-            )),
+            child: SafeArea(child: getSpinKit(Colors.white)),
           );
         });
+  }
+
+  static Widget getSpinKit(Color color) {
+    return SpinKitWave(
+      size: 30,
+      itemBuilder: (context, index) {
+        return Container(
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.all(Radius.circular(5))),
+        );
+      },
+    );
   }
 }

@@ -41,7 +41,7 @@ abstract class IApi {
     return HttpUtils.getInstance()
         .setBaseUrl(getBaseUrl())
         .post(url,
-            data: data,
+            itemData: data,
             queryParameters: queryParameters,
             options: options,
             cancelToken: cancelToken)
