@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpUtils {
-  static const String isToGuide = 'isToGuide';//标识是跳转到引导页面还是主页
+  static const String isToGuide = 'isToGuide'; //标识是跳转到引导页面还是主页
 
- static setSp<T>(String key, T t) async {
+  static setSp<T>(String key, T t) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     if (t is String) {
       await sp.setString(key, t);
@@ -20,8 +20,21 @@ class SpUtils {
     }
   }
 
- static Future<T> getSp<T>(String key) async {
+  static Future<T> getSp<T>(String key) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    return await sp.get(key) as T;
+    var value = await sp.get(key);
+    if (value == null) {
+      throw MySpIsNullException('value is null');
+    } else {
+      return value as T;
+    }
   }
+}
+
+class MySpIsNullException {
+  final String errMsg;
+
+  MySpIsNullException(this.errMsg);
+
+
 }

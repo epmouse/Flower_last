@@ -1,3 +1,4 @@
+import 'package:flower_last/pages/page_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,6 +22,8 @@ class GuideState extends State<Guide> {
   ];
   GuideModel bannerModels;
 
+  var _hideButton = true;
+
   @override
   Widget build(BuildContext context) {
     bannerModels = ModalRoute.of(context).settings.arguments;
@@ -29,12 +32,24 @@ class GuideState extends State<Guide> {
         children: <Widget>[
           _getBanners(),
           Offstage(
-            child: RaisedButton(
-              onPressed: () {
-//                Navigator.of(context).pushNamed()
-              },
-              color: Theme.of(context).accentColor,
-              child: Text('开启爱花之旅'),
+            offstage: _hideButton,
+            child: Align(
+              alignment: Alignment(0, 0.85),
+              child: RaisedButton(
+                onPressed: () {
+                Navigator.of(context).popAndPushNamed(MainNavPage.routerName);
+                },
+                color: Colors.white,
+                child: Text(
+                  '开启爱花之旅',
+                  style: TextStyle(color: Colors.red[200]),
+                ),
+                elevation: 1,
+                shape: ContinuousRectangleBorder(
+                  side: BorderSide(color: Colors.red[200], width: 0.3),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
             ),
           ),
         ],
@@ -52,22 +67,29 @@ class GuideState extends State<Guide> {
         localImages.add(CachedNetworkImage(imageUrl: s));
       }
     }
-    return Swiper(
-      itemBuilder: (context, index) {
-        return localImages[index];
-      },
-      itemCount: localImages.length,
-      pagination: SwiperPagination(
-        builder: DotSwiperPaginationBuilder(
-          color: Colors.white,
-          activeColor: Colors.white,
-          activeSize: 8,
-          size: 5,
+    return Container(
+      child: Swiper(
+        itemBuilder: (context, index) {
+          return localImages[index];
+        },
+        itemCount: localImages.length,
+        pagination: SwiperPagination(
+          builder: DotSwiperPaginationBuilder(
+            color: Colors.grey,
+            activeColor: Colors.grey,
+            activeSize: 8,
+            size: 5,
+          ),
         ),
+        autoplay: false,
+        scrollDirection: Axis.horizontal,
+        onTap: (index) {},
+        onIndexChanged: (index) {
+          setState(() {
+            _hideButton = index != (localImages.length - 1);
+          });
+        },
       ),
-      autoplay: false,
-      scrollDirection: Axis.horizontal,
-      onTap: (index) {},
     );
   }
 }

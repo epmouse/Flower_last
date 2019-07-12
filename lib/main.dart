@@ -46,9 +46,13 @@ class _MainPageState extends State<MainPage> {
       children: <Widget>[
         Splash(
           onHideCallback: () {
-            SpUtils.getSp<bool>('isToGuide').then((bool b) {
+            SpUtils.getSp<bool>(SpUtils.isToGuide).then((bool b) {
               Navigator.of(context)
-                  .pushNamed(b ? Guide.routerName : MainNavPage.routerName);
+                  .popAndPushNamed(b ? Guide.routerName : MainNavPage.routerName);
+            }).catchError((e){
+              if(e is MySpIsNullException){
+                Navigator.of(context).popAndPushNamed(Guide.routerName);
+              }
             });
 //            Navigator.of(context).pushNamed(routeName)
           },

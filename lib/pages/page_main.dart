@@ -29,7 +29,7 @@ class _MainNavPageState extends State<MainNavPage> {
   @override
   void initState() {
     super.initState();
-    SpUtils.setSp(SpUtils.isToGuide, true);
+    SpUtils.setSp(SpUtils.isToGuide, false);
   }
 
   @override
