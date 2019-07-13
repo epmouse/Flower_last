@@ -5,6 +5,7 @@ import 'package:flower_last/utils/util_status_bar.dart';
 import 'package:flower_last/widgets/widget_search_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Search extends StatefulWidget {
   static const routerName = '/search';
@@ -32,6 +33,7 @@ class SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     _arguments = ModalRoute.of(context).settings.arguments;
+    StatusBarUtils.setStatusColor(_arguments.bgColor, Brightness.dark);//状态栏字体设为黑色
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -127,6 +129,13 @@ class SearchState extends State<Search> {
         _hideWrapWidget();
       } else {
         _showWrapWidget();
+        //todo- 此处弹出toast 提示用户没有搜索到任何数据
+        Fluttertoast.showToast(
+            msg: "没有搜索到任何数据",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+        );
       }
       setState(() {
         Navigator.of(context).pop();
