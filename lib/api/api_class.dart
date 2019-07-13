@@ -15,6 +15,7 @@ abstract class IApi {
 
   //判断是否是正确的返回码
   bool isNormalResponse(dynamic responseCode);
+
   //返回results字段对应的数据
   Future getRequestForResults(String url,
       {Map<String, dynamic> queryParameters,
@@ -51,6 +52,7 @@ abstract class IApi {
       handleException(e);
     });
   }
+
   //提取result字段对应的数据
   performData(data) {
     if (isNormalResponse(data[getReturnCodeKey()])) {
@@ -60,17 +62,18 @@ abstract class IApi {
           errorCode: data[getReturnCodeKey()]);
     }
   }
+
   //返回response.data数据
   Future getRequestForResponseData(String url,
       {Map<String, dynamic> queryParameters,
-        Options options,
-        CancelToken cancelToken}) {
+      Options options,
+      CancelToken cancelToken}) {
     return HttpUtils.getInstance()
         .setBaseUrl(getBaseUrl())
         .get(url,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken)
+            queryParameters: queryParameters,
+            options: options,
+            cancelToken: cancelToken)
         .then((data) {
       if (isNormalResponse(data[getReturnCodeKey()])) {
         return data;
@@ -107,12 +110,42 @@ class FlowerApi extends IApi {
   @override
   void handleException(e) {
     //todo - 统一错误处理,根据每个项目返回的错误码处理
-
   }
 
   @override
   bool isNormalResponse(responseCode) {
     return responseCode == "01";
+  }
+}
+
+class XCTestApi extends IApi {
+  //搜索接口 https://m.ctrip.com/restapi/h5api/searchapp/search?source=mobileweb&action=autocomplete&contentType=json&keyword=%E9%95%BF%E5%9F%8E
+
+  static final String _returnCodeKey = "returnCode";
+  static final String _returnMsgKey = "errorMessage";
+  static final String _result = "results";
+  static final String _baseUrl = "https://m.ctrip.com/";
+
+  @override
+  getBaseUrl() => _baseUrl;
+
+  @override
+  getResult() => _result;
+
+  @override
+  getReturnCodeKey() => _returnCodeKey;
+
+  @override
+  getReturnMsgKey() => _returnMsgKey;
+
+  @override
+  void handleException(e) {
+    //todo - 统一错误处理,根据每个项目返回的错误码处理
+  }
+
+  @override
+  bool isNormalResponse(responseCode) {
+    return true;
   }
 }
 
@@ -140,5 +173,4 @@ class GankApi extends IApi {
   bool isNormalResponse(responseCode) {
     return !responseCode;
   }
-
 }

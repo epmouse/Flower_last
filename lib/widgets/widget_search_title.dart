@@ -1,14 +1,34 @@
+import 'package:flower_last/pages/page_search.dart';
 import 'package:flutter/material.dart';
 
 class SearchTitleBar extends StatefulWidget {
-  final Color bgColor;
-  final Color rightTextColor;
+  final Color bgColor; //整个标题背景色
+  //输入框的背景颜色
+  final Color inputBgColor;
+  final Color InputBorderColor;
+
+  //可定制左边的widget
+  final Widget leftWidget;
+
+  //可定制右边的widget
+  final Widget rightWidget;
+
+  //输入框text变动的监听
   final ValueChanged<String> onChanged;
 
+  //是否可输入
+  final bool inputEnable;
+
+  final TextEditingController textController;
   SearchTitleBar({
     this.bgColor = Colors.white,
-    this.rightTextColor = Colors.grey,
+    this.inputBgColor,
+    this.InputBorderColor,
+    this.leftWidget,
+    this.rightWidget,
     this.onChanged,
+    this.inputEnable = true,
+    this.textController,
   });
 
   @override
@@ -18,13 +38,13 @@ class SearchTitleBar extends StatefulWidget {
 }
 
 class SearchTitleBarState extends State<SearchTitleBar> {
-  TextEditingController _textController;
+  TextEditingController _textController ;
   bool _noText = true;
 
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController();
+    _textController = widget.textController?? TextEditingController();//外部传进来则使用外部的，没有传再new出来
     _resetOffstage();
   }
 
@@ -41,17 +61,29 @@ class SearchTitleBarState extends State<SearchTitleBar> {
       height: 56,
       child: Row(
         children: <Widget>[
+          Container(
+            child: widget.leftWidget ?? Padding(padding: EdgeInsets.all(0)),
+          ),
           Expanded(
-            child: _getInput(),
+            child: GestureDetector(
+              onTap: () {
+                if (!widget.inputEnable) {
+                  Navigator.of(context)
+                      .pushNamed(Search.routerName, arguments: SearchModel());
+                }
+              },
+              child: _getInput(),
+            ),
           ),
           GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: Text(
-              '取消',
-              style: TextStyle(fontSize: 14, color: widget.rightTextColor),
-            ),
+            child: widget.rightWidget ??
+                Text(
+                  '取消',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
           ),
           Padding(
             padding: EdgeInsets.all(5),
@@ -71,7 +103,9 @@ class SearchTitleBarState extends State<SearchTitleBar> {
       alignment: Alignment.center,
       height: 32,
       decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: widget.inputBgColor ?? Colors.grey[200],
+          border: Border.all(
+              width: 0.5, color: widget.InputBorderColor ?? Colors.grey[200]),
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,20 +119,20 @@ class SearchTitleBarState extends State<SearchTitleBar> {
             child: Padding(
               padding: EdgeInsets.only(top: 20, left: 5),
               child: TextField(
+                enabled: widget.inputEnable,
                 style: TextStyle(
                   fontSize: 14,
                 ),
                 textAlign: TextAlign.left,
                 controller: _textController,
-                //初始搜索值（非hintText）
-                autofocus: true,
+                autofocus: widget.inputEnable,
+                //不可输入时不自动获取焦点
                 decoration: InputDecoration(
                   border: InputBorder.none,
                 ),
                 onChanged: (text) {
                   _resetOffstage();
-                  widget.onChanged(text);
-                  //todo 请求搜索接口
+                  widget.onChanged(text); //抛出去
                 },
               ),
             ),

@@ -1,3 +1,5 @@
+import 'package:flower_last/api/api_class.dart';
+import 'package:flower_last/model/model_xc.dart';
 import 'package:flower_last/utils/util_dialog.dart';
 import 'package:flower_last/utils/util_status_bar.dart';
 import 'package:flower_last/widgets/widget_search_title.dart';
@@ -12,9 +14,11 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
+  final TextEditingController _textController = TextEditingController();
+
   SearchModel _arguments;
 
-  List<String> _searchResults = [];
+  List<XCTestItemModel> _searchResults = [];
 
   bool _textFieldNotEmpty = false;
 
@@ -61,10 +65,9 @@ class SearchState extends State<Search> {
           ),
           SearchTitleBar(
             bgColor: _arguments.bgColor,
+            textController: _textController,
             onChanged: (String result) {
-              DialogUtils.showFlowerDialog(
-                  context: context, canDismissible: false);
-              _textFieldNotEmpty = result != null && result.length != 0;
+
               toSearch(result);
             },
           ),
@@ -86,7 +89,16 @@ class SearchState extends State<Search> {
       ),
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(_searchResults[index]),
+          title: Text(
+            _searchResults[index]?.word,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
+          subtitle: Text(
+            _searchResults[index]?.districtname,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
         );
       },
       itemCount: _searchResults.length,
@@ -95,25 +107,29 @@ class SearchState extends State<Search> {
 
   /// 调用接口搜索，此接口只返回包含关键字的标题，用户点击展示后的标题才搜索对应条目并跳转页面展示
   void toSearch(String result) {
-    Future.delayed(Duration(seconds: 3), () {
-      _searchResults.clear();
-      if (_textFieldNotEmpty) {
-        _searchResults.add('$result >>>aaaaa');
-        _searchResults.add('$result >>>bbbbb');
-        _searchResults.add('$result >>>ccccc');
-        _searchResults.add('$result >>>ddddd');
-        _searchResults.add('$result >>>eeeee');
-        _searchResults.add('$result >>>fffff');
-        _searchResults.add('$result >>>ggggg');
-        _searchResults.add('$result >>>hhhhh');
-        _searchResults.add('$result >>>iiiii');
-        _searchResults.add('$result >>>jjjjj');
+    _textFieldNotEmpty = result != null && result.length != 0;
+    DialogUtils.showFlowerDialog(
+        context: context, canDismissible: false);
+    Map<String, dynamic> map = Map();
+    map['keyword'] = result;
+    IApi api = XCTestApi();
+    api
+        .getRequestForResponseData('restapi/h5api/searchapp/search',
+            queryParameters: map)
+        .then((data) {
+      XCTestModel xcTestModel = XCTestModel.fromJsonMap(data);
+      _searchResults = xcTestModel?.data;
+      if (result == null || result.length == 0) {
+        //当搜索关键字为空时，数据置为空
+        _searchResults.clear();
+      }
+      if (_searchResults != null && _searchResults.length > 0) {
         _hideWrapWidget();
       } else {
         _showWrapWidget();
       }
       setState(() {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       });
     });
   }
@@ -156,13 +172,31 @@ class SearchState extends State<Search> {
   _getWraps() {
     List<Widget> widgets = [];
     List<String> list = [
-      '绿萝', '芦荟', '龟背竹', '发财树', '富贵竹', '牡丹', '香龙血树', '白蝴蝶', '朱焦', '栀子', '文竹', '万年青', '巴西铁', '铁树', '黑美人', '滴水观音', '袖珍椰子'
+      '绿萝',
+      '芦荟',
+      '龟背竹',
+      '发财树',
+      '富贵竹',
+      '牡丹',
+      '香龙血树',
+      '白蝴蝶',
+      '朱焦',
+      '栀子',
+      '文竹',
+      '万年青',
+      '巴西铁',
+      '铁树',
+      '黑美人',
+      '滴水观音',
+      '袖珍椰子'
     ];
     for (String s in list) {
       widgets.add(
         GestureDetector(
           onTap: () {
-            //todo - 拿到 s 调用搜索接口,如果直接涉
+            _textController.text = s;
+            //此种方式设置进去，不会触发 textfield控件 onChange方法
+            toSearch(s);
           },
           child: Container(
             padding: EdgeInsets.all(5),
