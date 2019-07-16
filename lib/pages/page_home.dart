@@ -18,6 +18,9 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  final ScrollController _scrollController = ScrollController(); //listview的控制器
+
+  double _searchTitleOpacity = 0;
   MainPageModel _mainPageModel;
   Widget _mainWidget = Center(
     child: DialogUtils.getSpinKit(Colors.green),
@@ -27,6 +30,13 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     initData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        ///加载更多触发
+
+      }
+    });
   }
 
   @override
@@ -34,7 +44,7 @@ class HomeState extends State<Home> {
     StatusBarUtils.setStatusColor(
         Colors.transparent,
         Brightness
-            .light); //statusbar 在一个地方设置过后，整个app的statusbar状态都会改变，所以返回页面后需要恢复到该页面的配置。
+            .dark); //statusbar 在一个地方设置过后，整个app的statusbar状态都会改变，所以返回页面后需要恢复到该页面的配置。
     return Scaffold(
       body: _mainWidget,
     );
@@ -59,18 +69,45 @@ class HomeState extends State<Home> {
     } else {
       _mainWidget = Stack(
         children: <Widget>[
-          _getListView(items),
+          _buildRefreshListView(_getListView(items)),
+          Opacity(
+            opacity: _searchTitleOpacity,
+            child: Container(
+              height: 56 + MediaQuery.of(context).padding.top,
+              color: Colors.white,
+            ),
+          ),
           _getSearchTitle(),
         ],
       );
     }
   }
 
-  _getListView(List<MainPageItemModel> items){
+  _buildRefreshListView(getListView) {
+    return RefreshIndicator(
+      child: getListView,
+      notificationPredicate: (ScrollNotification notification) {
+        double pix = notification.metrics.pixels / 100;
+        if (pix > 1) {
+          pix = 1;
+        } else if (pix < 0) {
+          pix = 0;
+        }
+        setState(() {
+          _searchTitleOpacity = pix;
+        });
+        return true;
+      },
+      onRefresh: initData,
+    );
+  }
+
+  _getListView(List<MainPageItemModel> items) {
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
       child: ListView.builder(
+        controller: _scrollController,
         itemBuilder: (context, index) {
           Widget widget;
           MainPageItemModel mainPageItemModel = items[index];
@@ -141,11 +178,12 @@ class HomeState extends State<Home> {
   @override
   void dispose() {
     super.dispose();
+    _scrollController.dispose();
   }
 
-  void initData() {
+  Future<void> initData() async {
     IApi api = FlowerApi();
-    api.getRequestForResults('js/a/app/api/index').then((data) {
+    await api.getRequestForResults('js/a/app/api/index').then((data) {
       _mainPageModel = MainPageModel.fromJsonMap(data);
       setState(() {
         _getMainList();
@@ -184,6 +222,9 @@ class HomeState extends State<Home> {
     return Container(
       child: GridView.builder(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+
+          /// 禁止内部的gridView滑动，防止跟外部listView滑动冲突，从而导致在GridView上滑动时，滑动是失效的。
           itemCount: datas.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
@@ -209,19 +250,18 @@ class HomeState extends State<Home> {
           }),
     );
   }
+
   ///返回顶部搜索组件
   _getSearchTitle() {
-
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: SearchTitleBar(
         bgColor: Colors.transparent,
         leftWidget: Padding(padding: EdgeInsets.only(left: 30)),
         inputBgColor: Color(0x55e6e6fa),
         InputBorderColor: Colors.grey,
         inputEnable: false,
-        onChanged: (String result) {
-        },
+        onChanged: (String result) {},
       ),
     );
   }
