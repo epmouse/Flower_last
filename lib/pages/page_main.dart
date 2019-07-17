@@ -1,4 +1,5 @@
 import 'package:flower_last/model/model_bottom_nav.dart';
+import 'package:flower_last/pages/LoginPage.dart';
 import 'package:flower_last/pages/page_flowers.dart';
 import 'package:flower_last/pages/page_home.dart';
 import 'package:flower_last/pages/page_knowlege.dart';
@@ -19,7 +20,7 @@ class MainNavPage extends StatefulWidget {
 }
 
 class _MainNavPageState extends State<MainNavPage> {
-  final pages = [Home(), Flowers(), Knowledge(), Me()];
+  final pages = [Home(), Flowers(), LoginPage(), Me()];
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 

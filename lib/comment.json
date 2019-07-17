@@ -1,0 +1,44 @@
+{
+  "returnCode": "01",
+  "errorMessage": "获取首页数据成功!",
+  "results": {
+    "data": [
+      {
+        "userInfo": {
+          "address": "用户发表评论时的地点,可null",
+          "userIcon": "用户头像",
+          "userName": "用户名",
+          "publishTime": "发表的时间（xxx分钟以前）"
+        },
+        "publishDetail": {
+          "content": "发表的文字内容",
+          "images": [
+            "https://img2.mukewang.com/szimg/59b8a486000107fb05400300.jpg",
+            "https://img2.mukewang.com/szimg/59b8a486000107fb05400300.jpg",
+            "https://img2.mukewang.com/szimg/59b8a486000107fb05400300.jpg",
+            "https://img2.mukewang.com/szimg/59b8a486000107fb05400300.jpg"
+          ]
+        },
+        "commentInfo": {
+          "viewCount": "被查看的次数，todo- 考虑浏览图片算不算",
+          "giveLikeCount": "点赞次数",
+          "commentCount": "评论数",
+          "giveLikeUsers": [
+            {
+              "address": "可null",
+              "userIcon": "用户头像",
+              "userName": "用户名",
+              "publishTime": "null"
+            },
+            {
+              "address": "可null",
+              "userIcon": "用户头像",
+              "userName": "用户名",
+              "publishTime": "null"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -49,13 +49,31 @@ class LoginPageState extends State<LoginPage> {
                     TextField(
                       onSubmitted: (text) {},
                       controller: _userNameController,
+                      autofocus: false,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(10),
-                        icon: Icon(Icons.supervisor_account),
-                        hintText: '请输入注册的手机号',
-                        labelText: '手机号',
-                      ),
-                      autofocus: false, //为true则进入页面时自动获取焦点，默认为false
+                          contentPadding: EdgeInsets.all(10),
+                          icon: Icon(Icons.supervisor_account),
+                          hintText: '请输入注册的手机号',
+                          labelText: '手机号',
+                          //为true则进入页面时自动获取焦点，默认为false
+                          suffixIcon: GestureDetector(
+                            onTap: (){
+                              //todo- 调用获取验证码接口
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(6),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                              color: Theme.of(context).accentColor,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                '获取验证码',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12),
+                              ),
+                            ),
+                          )),
                     ),
                     Padding(padding: EdgeInsets.all(10)),
                     TextField(
@@ -100,6 +118,23 @@ class LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            //todo-忘记密码的操作
+                          },
+                          child: Text('忘记密码?'),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            //todo-跳转到注册页面
+                          },
+                          child: Text('立即注册'),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),

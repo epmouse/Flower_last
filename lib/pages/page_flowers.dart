@@ -1,3 +1,4 @@
+import 'package:flower_last/utils/util_encrypt.dart';
 import 'package:flutter/material.dart';
 
 class Flowers extends StatefulWidget {
@@ -46,18 +47,55 @@ class FlowersState extends State<Flowers> {
     );
   }
 
+  /// 覆盖在页面上的view，可以模拟实现toast和dialog,进度条，悬浮窗等控件
+  showOverlay(BuildContext context) async {
+    OverlayState overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
+      return Center(
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.pinkAccent,
+        ),
+      );
+    });
+    OverlayEntry overlayEntry2 = OverlayEntry(builder: (context) {
+      return Center(
+        child: Container(
+          height: 50.0,
+          width: 50.0,
+          color: Colors.tealAccent,
+          child: CircularProgressIndicator(),
+        ),
+      );
+    });
+
+    overlayState.insert(overlayEntry);
+    overlayState.insert(overlayEntry2);
+
+    await Future.delayed(Duration(seconds: 2));
+
+    overlayEntry.remove();
+    overlayEntry2.remove();
+  }
+
   ///顶部 个人信息条
   _buildUserRow() {
     return Container(
       height: 60,
       child: Row(
         children: <Widget>[
-          ClipOval(
-            child: Image.asset(
-              'imgs/guide_5.png',
-              height: 40,
-              width: 40,
-              fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () {
+//              showOverlay(context);
+            },
+            child: ClipOval(
+              child: Image.asset(
+                'imgs/guide_5.png',
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(
