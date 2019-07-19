@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class FlowerInterceptor extends Interceptor{
-
-
+class FlowerInterceptor extends Interceptor {
   @override
   onRequest(RequestOptions options) {
+    int l1 = DateTime.now().millisecondsSinceEpoch;
+
+
+
 
 //    DeviceInfo.get
 //    String deviceType = Utils.getPhoneModel();
@@ -39,11 +41,9 @@ class FlowerInterceptor extends Interceptor{
 //    builder.addHeader("userId", user.getId());
 //    }
 
-
+    return '';
   }
 
   @override
-  onResponse(Response response) {
-
-  }
+  onResponse(Response response) {}
 }

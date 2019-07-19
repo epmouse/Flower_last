@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
+import 'package:flower_last/utils/DeviceInfoUtils.dart';
 import 'package:flower_last/utils/util_encrypt.dart';
 import 'package:flutter/material.dart';
 
@@ -88,6 +92,9 @@ class FlowersState extends State<Flowers> {
           GestureDetector(
             onTap: () {
 //              showOverlay(context);
+              DeviceInfo info = DeviceInfo.getInstance();
+//             print('>>>>>>${info.androidId}');
+             print('>>>>>>${info.getDeviceId()}');
             },
             child: ClipOval(
               child: Image.asset(

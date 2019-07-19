@@ -5,6 +5,7 @@ import 'package:flower_last/pages/page_guide.dart';
 import 'package:flower_last/pages/page_main.dart';
 import 'package:flower_last/utils/routes_util.dart';
 import 'package:flower_last/utils/util_sp.dart';
+import 'package:flower_last/utils/util_wechat.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,8 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    WeChatUtils.init();//初始化微信
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

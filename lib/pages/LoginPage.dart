@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flower_last/utils/util_wechat.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -57,14 +58,14 @@ class LoginPageState extends State<LoginPage> {
                           labelText: '手机号',
                           //为true则进入页面时自动获取焦点，默认为false
                           suffixIcon: GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               //todo- 调用获取验证码接口
                             },
                             child: Container(
                               margin: EdgeInsets.all(6),
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                              color: Theme.of(context).accentColor,
+                                color: Theme.of(context).accentColor,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
@@ -108,7 +109,7 @@ class LoginPageState extends State<LoginPage> {
                             return;
                           }
                           if (password == null || password.length == 0) {
-                            Fluttertoast.showToast(msg: '请先输入密码');
+                            Fluttertoast.showToast(msg: '请先输入验证码');
                             return;
                           }
 
@@ -119,23 +120,25 @@ class LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            //todo-忘记密码的操作
-                          },
-                          child: Text('忘记密码?'),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            //todo-跳转到注册页面
-                          },
-                          child: Text('立即注册'),
-                        ),
-                      ],
-                    ),
+
+                     ///考虑每次登录都使用短信验证码，所以去掉忘记密码和立即注册的操作。
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                      children: <Widget>[
+//                        FlatButton(
+//                          onPressed: () {
+//                            //todo-忘记密码的操作
+//                          },
+//                          child: Text('忘记密码?'),
+//                        ),
+//                        FlatButton(
+//                          onPressed: () {
+//                            //todo-跳转到注册页面
+//                          },
+//                          child: Text('立即注册'),
+//                        ),
+//                      ],
+//                    ),
                     Padding(
                       padding: EdgeInsets.all(10),
                     ),
@@ -171,5 +174,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
 //跳转到微信登录
-  void _toWeChatLogin() {}
+  void _toWeChatLogin() {
+    WeChatUtils.sendAuth();
+  }
 }
