@@ -2,7 +2,7 @@ import 'package:flower_last/api/api_class.dart';
 import 'package:flower_last/model/model_init.dart';
 import 'package:flower_last/pages/SplashPage.dart';
 import 'package:flower_last/pages/page_guide.dart';
-import 'package:flower_last/pages/page_main.dart';
+import 'package:flower_last/pages/page_main_docker.dart';
 import 'package:flower_last/utils/routes_util.dart';
 import 'package:flower_last/utils/util_sp.dart';
 import 'package:flower_last/utils/util_wechat.dart';
