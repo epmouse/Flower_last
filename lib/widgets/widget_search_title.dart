@@ -5,7 +5,7 @@ class SearchTitleBar extends StatefulWidget {
   final Color bgColor; //整个标题背景色
   //输入框的背景颜色
   final Color inputBgColor;
-  final Color InputBorderColor;
+  final Color inputBorderColor;
 
   //可定制左边的widget
   final Widget leftWidget;
@@ -20,10 +20,11 @@ class SearchTitleBar extends StatefulWidget {
   final bool inputEnable;
 
   final TextEditingController textController;
+
   SearchTitleBar({
     this.bgColor = Colors.white,
     this.inputBgColor,
-    this.InputBorderColor,
+    this.inputBorderColor,
     this.leftWidget,
     this.rightWidget,
     this.onChanged,
@@ -38,13 +39,15 @@ class SearchTitleBar extends StatefulWidget {
 }
 
 class SearchTitleBarState extends State<SearchTitleBar> {
-  TextEditingController _textController ;
+  TextEditingController _textController;
+
   bool _noText = true;
 
   @override
   void initState() {
     super.initState();
-    _textController = widget.textController?? TextEditingController();//外部传进来则使用外部的，没有传再new出来
+    _textController = widget.textController ??
+        TextEditingController(); //外部传进来则使用外部的，没有传再new出来
     _resetOffstage();
   }
 
@@ -62,7 +65,7 @@ class SearchTitleBarState extends State<SearchTitleBar> {
       child: Row(
         children: <Widget>[
           Container(
-            child: widget.leftWidget ?? Padding(padding: EdgeInsets.all(0)),
+            child: widget.leftWidget ?? SizedBox(width: 10,),
           ),
           Expanded(
             child: GestureDetector(
@@ -80,13 +83,13 @@ class SearchTitleBarState extends State<SearchTitleBar> {
               Navigator.of(context).pop();
             },
             child: widget.rightWidget ??
-                Text(
-                  '取消',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                Padding(
+                  padding: EdgeInsets.only(left: 10,right: 10),
+                  child: Text(
+                    '取消',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
                 ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(5),
           ),
         ],
       ),
@@ -96,70 +99,76 @@ class SearchTitleBarState extends State<SearchTitleBar> {
   /// 搜索框
   _getInput() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      padding: EdgeInsets.only(
-        left: 5,
-      ),
-      alignment: Alignment.center,
       height: 32,
-      decoration: BoxDecoration(
-          color: widget.inputBgColor ?? Colors.grey[200],
-          border: Border.all(
-              width: 0.5, color: widget.InputBorderColor ?? Colors.grey[200]),
-          borderRadius: BorderRadius.all(Radius.circular(16))),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(
+      color: Colors.transparent, //此处不添加背景色，点击事件会失效，（外层的GestureDetector的点击事件）todo-待找原因
+      child: TextField(
+        enabled: widget.inputEnable,
+        style: TextStyle(
+          fontSize: 14,
+        ),
+        textAlign: TextAlign.left,
+        controller: _textController,
+        autofocus: widget.inputEnable,
+        onChanged: (text) {
+          _resetOffstage();
+          widget.onChanged(text); //抛出去
+        },
+        //不可输入时不自动获取焦点
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(top: 10),
+          //添加hintText后，文字会偏上，添加此约束处理，原因可能时flutter的bug
+          hintText: '搜索默认值',
+          prefixIcon: Icon(
+            //左侧图标
             Icons.search,
             color: Colors.grey,
             size: 20,
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(top: 20, left: 5),
-              child: TextField(
-                enabled: widget.inputEnable,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.left,
-                controller: _textController,
-                autofocus: widget.inputEnable,
-                //不可输入时不自动获取焦点
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                ),
-                onChanged: (text) {
-                  _resetOffstage();
-                  widget.onChanged(text); //抛出去
-                },
+          suffixIcon: getInputClearBtn(),
+          filled: true,
+          //背景填充
+          fillColor: widget.inputBgColor ?? Colors.grey[200],
+          //背景填充色
+          border: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 0.3,
+                color: widget.inputBorderColor ?? Colors.grey[200],
               ),
-            ),
-          ),
-          Offstage(
-            offstage: _noText,
-            child: GestureDetector(
-              onTap: () {
-                _textController.text = '';
-                _resetOffstage();
-                widget.onChanged('');
-              },
-              child: Container(
-                //给容器宽度，增大icon的点击区域。
-                width: 40,
-                height: 30,
-                padding: EdgeInsets.only(right: 10),
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  Icons.clear,
-                  color: Colors.black,
-                  size: 20,
-                ),
+              borderRadius: BorderRadius.circular(16)),
+          focusedBorder: OutlineInputBorder(
+              //获取焦点后边框也使用原边框，防止变色
+              borderSide: BorderSide(
+                width: 0.3,
+                color: widget.inputBorderColor ?? Colors.grey[200],
               ),
-            ),
+              borderRadius: BorderRadius.circular(16)),
+        ),
+      ),
+    );
+  }
+
+  ///搜索框内右侧按钮，用户清除内容
+  Offstage getInputClearBtn() {
+    return Offstage(
+      offstage: _noText,
+      child: GestureDetector(
+        onTap: () {
+          _textController.text = '';
+          _resetOffstage();
+          widget.onChanged('');
+        },
+        child: Container(
+          //给容器宽度，增大icon的点击区域。
+          width: 40,
+          height: 30,
+          padding: EdgeInsets.only(right: 10),
+          alignment: Alignment.centerRight,
+          child: Icon(
+            Icons.clear,
+            color: Colors.black,
+            size: 20,
           ),
-        ],
+        ),
       ),
     );
   }

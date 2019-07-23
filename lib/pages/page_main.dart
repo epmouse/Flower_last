@@ -26,7 +26,6 @@ class _MainNavPageState extends State<MainNavPage> {
 
   bool isSplash = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -41,13 +40,14 @@ class _MainNavPageState extends State<MainNavPage> {
   ///创建主页面
   Scaffold _buildMainPage(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
-          unselectedItemColor: Theme
-              .of(context)
-              .disabledColor,
-          selectedItemColor: Theme
-              .of(context)
-              .primaryColor,
+          unselectedItemColor: Theme.of(context).disabledColor,
+          selectedItemColor: Theme.of(context).primaryColor,
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -93,5 +93,4 @@ class _MainNavPageState extends State<MainNavPage> {
 
   ///下载远程图标
   _getRemoteItems() {}
-
 }

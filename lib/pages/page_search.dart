@@ -69,7 +69,6 @@ class SearchState extends State<Search> {
             bgColor: _arguments.bgColor,
             textController: _textController,
             onChanged: (String result) {
-
               toSearch(result);
             },
           ),

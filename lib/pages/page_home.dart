@@ -22,13 +22,16 @@ class HomeState extends State<Home> {
 
   double _searchTitleOpacity = 0;
   MainPageModel _mainPageModel;
-  Widget _mainWidget = Center(
-    child: DialogUtils.getSpinKit(Colors.green),
-  );
+  Widget _mainWidget;
+
+  var _isLoading = true;
+
+  var _isNotEmpty = true; //数据不为空
 
   @override
   void initState() {
     super.initState();
+
     initData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -46,56 +49,73 @@ class HomeState extends State<Home> {
         Brightness
             .dark); //statusbar 在一个地方设置过后，整个app的statusbar状态都会改变，所以返回页面后需要恢复到该页面的配置。
     return Scaffold(
-      body: _mainWidget,
+      body: _getMainList(),
     );
   }
 
   _getMainList() {
-    List<MainPageItemModel> items = _mainPageModel?.itemData;
-    if (items == null || items.length == 0) {
-      //数据为空
-      _mainWidget = Center(
-        child: Column(
-          children: <Widget>[
-            Icon(
-              Icons.info_outline,
-              size: 80,
-            ),
-            Padding(padding: EdgeInsets.only(top: 30)),
-            Text('没有任何数据哦~'),
-          ],
-        ),
-      );
-    } else {
-      _mainWidget = Stack(
-        children: <Widget>[
-          _buildRefreshListView(_getListView(items)),
-          Opacity(
-            opacity: _searchTitleOpacity,
-            child: Container(
-              height: 56 + MediaQuery.of(context).padding.top,
-              color: Colors.white,
-            ),
+    List<MainPageItemModel> items = _mainPageModel?.itemData ?? List();
+    print('重新执行');
+    return Stack(
+      children: <Widget>[
+        Offstage(
+          offstage: !_isLoading,
+          child: Center(
+            child: DialogUtils.getSpinKit(Colors.green),
           ),
-          _getSearchTitle(),
+        ),
+        Offstage(
+          offstage: _isLoading || !_isNotEmpty,
+          child: _buildRefreshListView(_getListView(items)),
+        ),
+        Offstage(
+          offstage: _isNotEmpty,
+          child: getEmptyWidget(),
+        ),
+        Opacity(
+          opacity: _searchTitleOpacity,
+          child: Container(
+            height: 56 + MediaQuery.of(context).padding.top,
+            decoration: BoxDecoration(
+                color: Colors.white, boxShadow: [BoxShadow(blurRadius: 3)]),
+          ),
+        ),
+        _getSearchTitle(),
+      ],
+    );
+//    }
+  }
+
+  Widget getEmptyWidget() {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Icon(
+            Icons.info_outline,
+            size: 80,
+          ),
+          Padding(padding: EdgeInsets.only(top: 30)),
+          Text('没有任何数据哦~'),
         ],
-      );
-    }
+      ),
+    );
   }
 
   _buildRefreshListView(getListView) {
     return RefreshIndicator(
       child: getListView,
       notificationPredicate: (ScrollNotification notification) {
-        double pix = notification.metrics.pixels / 100;
-        if (pix > 1) {
-          pix = 1;
-        } else if (pix < 0) {
-          pix = 0;
+        if (0 == notification.depth) {//只捕获最外层ListView的滑动数据
+          double pix = notification.metrics.pixels / 150;
+          if (pix > 1) {
+            pix = 1;
+          } else if (pix < 0) {
+            pix = 0;
+          }
+          setState(() {
+            _searchTitleOpacity = pix;
+          });
         }
-        setState(() {
-          _searchTitleOpacity = pix;
-        });
         return true;
       },
       onRefresh: initData,
@@ -184,9 +204,11 @@ class HomeState extends State<Home> {
   Future<void> initData() async {
     IApi api = FlowerApi();
     await api.getRequestForResults('js/a/app/api/index').then((data) {
-      _mainPageModel = MainPageModel.fromJsonMap(data);
       setState(() {
-        _getMainList();
+        _mainPageModel = MainPageModel.fromJsonMap(data);
+        _isNotEmpty = _mainPageModel?.itemData != null ||
+            _mainPageModel?.itemData?.length != 0;
+        _isLoading = false;
       });
     });
   }
@@ -220,6 +242,7 @@ class HomeState extends State<Home> {
     final List<MainCommonModel> datas = mainPageItemModel.normalDatas;
     var crossAxisCount = datas.length > 8 ? 5 : 4;
     return Container(
+      margin: EdgeInsets.all(5),
       child: GridView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -257,9 +280,10 @@ class HomeState extends State<Home> {
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: SearchTitleBar(
         bgColor: Colors.transparent,
-        leftWidget: Padding(padding: EdgeInsets.only(left: 30)),
-        inputBgColor: Color(0x55e6e6fa),
-        InputBorderColor: Colors.grey,
+        leftWidget: SizedBox(width: 20,),
+        rightWidget: SizedBox(width: 20,),
+        inputBgColor: Colors.white,
+        inputBorderColor: Colors.grey,
         inputEnable: false,
         onChanged: (String result) {},
       ),
