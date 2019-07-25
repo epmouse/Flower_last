@@ -33,7 +33,7 @@ class SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     _arguments = ModalRoute.of(context).settings.arguments;
-    StatusBarUtils.setStatusColor(_arguments.bgColor, Brightness.dark);//状态栏字体设为黑色
+    StatusBarUtils.setStatusColor(color:_arguments.bgColor,statusBarBrightness: Brightness.dark);//状态栏字体设为黑色
     return Scaffold(
       body: Stack(
         children: <Widget>[

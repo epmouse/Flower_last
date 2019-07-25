@@ -21,7 +21,7 @@ class MainNavPage extends StatefulWidget {
 }
 
 class _MainNavPageState extends State<MainNavPage> {
-  final pages = [Home(), Flowers(), LoginPage(), CameraPage()];
+  final pages = [Home(), Flowers(), LoginPage(), Me()];
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
@@ -42,7 +42,12 @@ class _MainNavPageState extends State<MainNavPage> {
   Scaffold _buildMainPage(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context){
+            return CameraPage();
+          }));
+
+        },
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

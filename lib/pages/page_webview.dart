@@ -144,7 +144,7 @@ class WebViewPageState extends State<WebViewPage> with WidgetsBindingObserver {
 
   setStatusColor() {
     StatusBarUtils.setStatusColor(
-        _arguments.titleColor, _arguments.statusBarFontColor);
+        color:_arguments.titleColor, statusBarBrightness:_arguments.statusBarFontColor);
   }
 }
 

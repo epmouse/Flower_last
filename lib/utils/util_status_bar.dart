@@ -6,9 +6,9 @@ class StatusBarUtils {
   }
 
   /// statusBarBrightness  状态栏文字颜色  黑和白  Brightness.light   Brightness.dark
- static void setStatusColor(Color statusBarColor,Brightness statusBarBrightness) {
+ static void setStatusColor({Color color = Colors.transparent,Brightness statusBarBrightness = Brightness.dark}) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
+        statusBarColor: color,
         statusBarIconBrightness: statusBarBrightness,
     ));
   }

@@ -44,10 +44,7 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    StatusBarUtils.setStatusColor(
-        Colors.transparent,
-        Brightness
-            .dark); //statusbar 在一个地方设置过后，整个app的statusbar状态都会改变，所以返回页面后需要恢复到该页面的配置。
+    StatusBarUtils.setStatusColor(color: Colors.transparent, statusBarBrightness: Brightness.dark); //statusbar 在一个地方设置过后，整个app的statusbar状态都会改变，所以返回页面后需要恢复到该页面的配置。
     return Scaffold(
       body: _getMainList(),
     );
@@ -105,7 +102,8 @@ class HomeState extends State<Home> {
     return RefreshIndicator(
       child: getListView,
       notificationPredicate: (ScrollNotification notification) {
-        if (0 == notification.depth) {//只捕获最外层ListView的滑动数据
+        if (0 == notification.depth) {
+          //只捕获最外层ListView的滑动数据
           double pix = notification.metrics.pixels / 150;
           if (pix > 1) {
             pix = 1;
@@ -280,8 +278,12 @@ class HomeState extends State<Home> {
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: SearchTitleBar(
         bgColor: Colors.transparent,
-        leftWidget: SizedBox(width: 20,),
-        rightWidget: SizedBox(width: 20,),
+        leftWidget: SizedBox(
+          width: 20,
+        ),
+        rightWidget: SizedBox(
+          width: 20,
+        ),
         inputBgColor: Colors.white,
         inputBorderColor: Colors.grey,
         inputEnable: false,
