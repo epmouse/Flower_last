@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flower_last/utils/screen_utils.dart';
+import 'package:flower_last/utils/util_baidu_flower_recognition.dart';
 import 'package:flower_last/utils/util_camera.dart';
 import 'package:flower_last/utils/util_status_bar.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +98,9 @@ class _CameraPageState extends State<CameraPage> {
               alignment: Alignment.bottomCenter,
               child: CameraBottomActionWidget(controller, (String imgPath) {
                 imagePath = imgPath;
+                FlowerRecognitionUtil.identify(imgPath).then((data){
+                  print('>>>>>>>>>>>>>>>>>$data');
+                });
                 isTaking = false;
                 setState(() {});
               }),

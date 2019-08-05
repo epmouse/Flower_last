@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flower_last/utils/DeviceInfoUtils.dart';
+import 'package:flower_last/utils/util_baidu_flower_recognition.dart';
 import 'package:flower_last/utils/util_encrypt.dart';
 import 'package:flutter/material.dart';
 
@@ -91,10 +92,7 @@ class FlowersState extends State<Flowers> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-//              showOverlay(context);
-              DeviceInfo info = DeviceInfo.getInstance();
-//             print('>>>>>>${info.androidId}');
-             print('>>>>>>${info.getDeviceId()}');
+              FlowerRecognitionUtil.getAccessToken();
             },
             child: ClipOval(
               child: Image.asset(
